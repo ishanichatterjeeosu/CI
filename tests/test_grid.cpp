@@ -1,19 +1,24 @@
+#include <gtest/gtest.h>
+
 #include "grid.hpp"
 
-namespace ci_demo {
-namespace {
-constexpr int kDirs[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-}  // namespace
+using ci_demo::Neighbors;
 
-std::vector<std::pair<int, int>> Neighbors(int rows, int cols, int r, int c) {
-  std::vector<std::pair<int, int>> out;
-  for (const auto& d : kDirs) {
-    const int nr = r + d[0];
-    const int nc = c + d[1];
-    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
-    out.emplace_back(nr, nc);
-  }
-  return out;
+TEST(NeighborsTest, InteriorCellHasFour) {
+  EXPECT_EQ(Neighbors(3, 3, 1, 1).size(), 4u);
 }
 
-}  // namespace ci_demo
+TEST(NeighborsTest, CornerCellHasTwo) {
+  EXPECT_EQ(Neighbors(3, 3, 0, 0).size(), 2u);
+}
+
+TEST(NeighborsTest, BottomEdgeStaysInBounds) {
+  const auto n = Neighbors(3, 3, 2, 1);
+  EXPECT_EQ(n.size(), 3u);
+  for (const auto& [r, c] : n) {
+    EXPECT_GE(r, 0);
+    EXPECT_LT(r, 3);
+    EXPECT_GE(c, 0);
+    EXPECT_LT(c, 3);
+  }
+}
