@@ -18,6 +18,11 @@ jobs:
         run: cmake --build build --parallel
       - name: Run tests
         run: ctest --test-dir build --output-on-failure
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test_grid-binary
+          path: build/test_grid
 
         
   
